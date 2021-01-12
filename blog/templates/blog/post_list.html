@@ -61,18 +61,18 @@
         <div class="col-md-8">
 
             <h1 class="my-4">Blog</h1>
-            {% for p in posts %}
+            {% for p in object_list %}
             <!-- Blog Post -->
             <div class="card mb-4">
                 {% if p.head_image %}
-                <img class="card-img-top" src="{{p.head_image.url}}" alt="Card image cap">
+                <img class="card-img-top" src="{{p.head_image.url}}" alt="Card image cap" width="750" height="300">
                 {% else %}
-                <img class="card-img-top" src="https://picsum.photos/seed/picsum/750/300" alt="Card image cap">
+                <img class="card-img-top" src="https://picsum.photos/seed/picsum/750/300"  width="750" height="300" alt="Card image cap">
 
                 {% endif %}
                 <div class="card-body">
                     <h2 class="card-title">{{p.title}}</h2>
-                    <p class="card-text">{{p.content}}</p>
+                    <p class="card-text">{{p.content | truncatewords:50}}</p>
                     <a href="#" class="btn btn-primary">Read More →</a>
                 </div>
                 <div class="card-footer text-muted">
