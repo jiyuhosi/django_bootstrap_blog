@@ -11,6 +11,8 @@ class Post(models.Model):
     created = models.DateTimeField()
     #作成者
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    #写真UP
+    head_image = models.ImageField(upload_to='blog/%Y/%m/%d/', blank=True)
 
     def  __str__(self):
         return '{}::{}'.format(self.title, self.author)
