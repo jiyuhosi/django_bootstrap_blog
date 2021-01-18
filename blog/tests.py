@@ -62,6 +62,13 @@ class TestView(TestCase):
         self.assertIn('Blog', navbar.text)
         self.assertIn('About me', navbar.text)
 
+    def check_right_side(self, soup):
+        #category
+        category_card = soup.find('div', id='category-card')
+
+        self.assertIn('unclassified (1)', category_card.text)
+        self.assertIn('political/society (1)', category_card.text)
+
 
     def test_post_list_no_post(self):
         response = self.client.get('/blog/')
@@ -109,16 +116,12 @@ class TestView(TestCase):
         post_000_read_more_btn = body.find('a', id='read-more-post-{}'.format(post_000.pk))
         self.assertEqual(post_000_read_more_btn['href'],post_000.get_absolute_url())
 
-        #category
-        category_card = body.find('div', id='category-card')
-        self.assertIn('unclassified (1)', category_card.text)
-        self.assertIn('political/society (1)', category_card.text)
-        #main
-        main_div = body.find('div', id='main_div')
+        self.check_right_side(soup)
+
+        # main
+        main_div = soup.find('div', id='main_div')
         self.assertIn('unclassified', main_div.text)
-        self.assertIn('political/society', category_card.text)
-
-
+        self.assertIn('political/society', main_div.text)
 
 
 
@@ -128,6 +131,14 @@ class TestView(TestCase):
             content='the the',
             author=self.author_000,
         )
+
+        post_001 = create_post(
+            title='The second post',
+            content='second second',
+            author=self.author_000,
+            category=create_category(name='political/society'),
+        )
+
 
         self.assertGreater(Post.objects.count(), 0)
         post_000_url = post_000.get_absolute_url()
@@ -150,6 +161,8 @@ class TestView(TestCase):
         self.assertIn(post_000.author.username, main_div.text)
 
         self.assertIn(post_000.content, main_div.text)
+
+        self.check_right_side(soup)
 
 
 
