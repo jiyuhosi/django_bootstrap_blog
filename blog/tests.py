@@ -138,11 +138,16 @@ class TestView(TestCase):
         self.assertIn('no sentence', soup.body.text)
 
     def test_post_list_with_post(self):
+        tag_america =create_tag(name='america')
+
         post_000 = create_post(
             title='The first post',
             content='the the',
             author=self.author_000,
         )
+
+        post_000.tags.add(tag_america)
+        post_000.save()
 
         post_001 = create_post(
             title='The second post',
@@ -150,6 +155,8 @@ class TestView(TestCase):
             author=self.author_000,
             category=create_category(name='political/society'),
         )
+        post_001.tags.add(tag_america)
+        post_001.save()
 
         self.assertGreater(Post.objects.count(), 0)
 
@@ -172,14 +179,19 @@ class TestView(TestCase):
         self.assertIn('unclassified', main_div.text)
         self.assertIn('political/society', main_div.text)
 
-
+        # Tag
+        post_card_000 = main_div.find('div', id='post-card-{}'.format(post_000.pk))
+        self.assertIn('#america',post_card_000.text)
 
     def test_post_detail(self):
+        tag_america =create_tag(name='america')
         post_000 = create_post(
             title='The first post',
             content='the the',
             author=self.author_000,
         )
+        post_000.tags.add(tag_america)
+        post_000.save()
 
         post_001 = create_post(
             title='The second post',
@@ -187,7 +199,6 @@ class TestView(TestCase):
             author=self.author_000,
             category=create_category(name='political/society'),
         )
-
 
         self.assertGreater(Post.objects.count(), 0)
         post_000_url = post_000.get_absolute_url()
@@ -212,6 +223,9 @@ class TestView(TestCase):
         self.assertIn(post_000.content, main_div.text)
 
         self.check_right_side(soup)
+
+        # Tag
+        self.assertIn('#america',main_div.text)
 
     def test_post_list_by_category(self):
         category_politics = create_category(name='political/society')
@@ -264,6 +278,8 @@ class TestView(TestCase):
         main_div = soup.find('div', id='main-div')
         self.assertIn('unclassified', main_div.text)
         self.assertNotIn(category_politics.name, main_div.text)
+
+
 
 
 
