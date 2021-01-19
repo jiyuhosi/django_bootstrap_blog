@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdown
+
+
 # Create your models here.
 
 class Category(models.Model):
@@ -33,7 +37,7 @@ class Post(models.Model):
     #title名 30文字まで
     title = models.CharField(max_length=30)
     #内容
-    content = models.TextField()
+    content = MarkdownxField()
     #作成日
     created = models.DateTimeField()
     #作成者
@@ -42,7 +46,7 @@ class Post(models.Model):
     head_image = models.ImageField(upload_to='blog/%Y/%m/%d/', blank=True)
 
     category = models.ForeignKey(Category,blank=True, null=True, on_delete=models.SET_NULL)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
 
     def  __str__(self):
         return '{}::{}'.format(self.title, self.author)
@@ -50,6 +54,9 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return '/blog/{}/'.format(self.pk)
+
+    def get_markdown_content(self):
+        return markdown(self.content)
 
 
 
