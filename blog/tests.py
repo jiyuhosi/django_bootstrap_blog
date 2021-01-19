@@ -104,7 +104,8 @@ class TestModel(TestCase):
 class TestView(TestCase):
     def setUp(self):
         self.client = Client()
-        self.author_000 = User.objects.create(username='smith', password='nopassword')
+        self.author_000 = User.objects.create_user(username='smith', password='nopassword')
+        self.user_obama = User.objects.create_user(username='obama', password='nopassword')
 
     def check_navbar(self,soup):
         navbar = soup.find('nav', id="navbar")
@@ -185,10 +186,12 @@ class TestView(TestCase):
 
     def test_post_detail(self):
         tag_america =create_tag(name='america')
+        category_politics = create_category(name='political/society')
         post_000 = create_post(
             title='The first post',
             content='the the',
             author=self.author_000,
+            category= category_politics,
         )
         post_000.tags.add(tag_america)
         post_000.save()
@@ -197,7 +200,7 @@ class TestView(TestCase):
             title='The second post',
             content='second second',
             author=self.author_000,
-            category=create_category(name='political/society'),
+
         )
 
         self.assertGreater(Post.objects.count(), 0)
@@ -226,6 +229,33 @@ class TestView(TestCase):
 
         # Tag
         self.assertIn('#america',main_div.text)
+
+        # exist cagegory
+        self.assertIn(category_politics.name, main_div.text)
+        # edit 버튼이 로근이하지 않는경우 보이지 않음
+        self.assertNotIn('EDIT', main_div.text)
+
+        login_success = self.client.login(username='smith', password='nopassword')
+        self.assertTrue(login_success)
+        response = self.client.get(post_000_url)
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        main_div = soup.find('div', id='main-div')
+
+        self.assertEqual(post_000.author, self.author_000)
+        self.assertIn('EDIT', main_div.text)
+
+        login_success = self.client.login(username='obama', password='nopassword')
+        self.assertTrue(login_success)
+        response = self.client.get(post_000_url)
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        main_div = soup.find('div', id='main-div')
+
+        self.assertEqual(post_000.author, self.author_000)
+        self.assertNotIn('EDIT', main_div.text)
 
     def test_post_list_by_category(self):
         category_politics = create_category(name='political/society')

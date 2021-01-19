@@ -6,11 +6,23 @@
     <!-- Title -->
     <h1 class="mt-4">{{object.title}}</h1>
 
+        {% if object.category %}
+            <span class="badge bg-primary float-right" >{{object.category}}</span>
+        {% else %}
+            <span class="badge bg-primary float-right">unclassified</span>
+        {% endif %}
+
+
+
     <!-- Author -->
     <p class="lead">
+
         by
         <a href="#">{{object.author.username}}</a>
     </p>
+    {% if request.user == object.author %}
+        <button type="button" class="btn btn-small btn-outline-secondary float-right">EDIT</button>
+    {% endif %}
 
     <hr>
 
