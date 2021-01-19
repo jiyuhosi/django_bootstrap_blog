@@ -17,6 +17,14 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'categories'
 
+class Tag(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+    slug = models.SlugField(unique=True, allow_unicode=True)
+
+    def __str__(self):
+        return self.name
+
+
 
 class Post(models.Model):
     #title名 30文字まで
@@ -31,6 +39,7 @@ class Post(models.Model):
     head_image = models.ImageField(upload_to='blog/%Y/%m/%d/', blank=True)
 
     category = models.ForeignKey(Category,blank=True, null=True, on_delete=models.SET_NULL)
+    tags = models.ManyToManyField(Tag)
 
     def  __str__(self):
         return '{}::{}'.format(self.title, self.author)

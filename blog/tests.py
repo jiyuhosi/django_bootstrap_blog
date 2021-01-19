@@ -4,7 +4,7 @@
 
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
-from .models import Post, Category
+from .models import Post, Category ,Tag
 from django.utils import timezone
 from django.contrib.auth.models import User
 
@@ -31,6 +31,16 @@ def create_category(name='life', description=''):
     return category
 
 
+def create_tag(name='some_tag'):
+    tag, is_created = Tag.objects.get_or_create(
+        name=name
+    )
+    tag.slug = tag.name.replace('','-').replace('/','')
+    tag.save()
+
+    return tag
+
+
 class TestModel(TestCase):
     def setUp(self):
         self.client = Client()
@@ -38,6 +48,42 @@ class TestModel(TestCase):
 
     def text_category(self):
         category = create_category()
+
+    def test_tag(self):
+        tag_000 = create_tag(name='bad_guy')
+        tag_001 = create_tag(name='america')
+
+        post_000 = create_post(
+            title='The first post',
+            content='the the',
+            author=self.author_000,
+        )
+
+        post_000.tags.add(tag_000)
+        post_000.tags.add(tag_001)
+        post_000.save()
+
+        post_001 = create_post(
+            title='i can do it',
+            content='story of me',
+            author=self.author_000,
+        )
+
+        post_001.tags.add(tag_001)
+        post_001.save()
+
+
+        # post have 2 more tags
+        self.assertEqual(post_000.tags.count(), 2)
+        self.assertEqual(tag_001.post_set.count(), 2)  # tag have 2 more post
+        self.assertEqual(tag_001.post_set.first(), post_000)
+        self.assertEqual(tag_001.post_set.last(), post_001)
+
+
+
+
+
+
 
     def test_post(self):
         category = create_category()
