@@ -29,7 +29,7 @@
     {{object.content}}
     <br>
     {% for tag in object.tags.all %}
-        <a href="tag.get_absolute_url">#{{ tag }}&nbsp</a>
+        <a href="{{tag.get_absolute_url}}">#{{ tag }}&nbsp</a>
     {% endfor %}
     <hr>
 
