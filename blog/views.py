@@ -113,28 +113,28 @@ def new_comment(request, pk):
     else:
         return redirect('/blog/')
 
-# def delete_comment(request, pk):
-#     comment = Comment.objects.get(pk=pk)
-#     post = comment.post
-#     if request.user == comment.author:
-#         comment.delete()
-#         return redirect(post.get_absolute_url() + '#comment-list')
-#     else:
-#         return redirect('/blog/')
+def delete_comment(request, pk):
+    comment = Comment.objects.get(pk=pk)
+    post = comment.post
+    if request.user == comment.author:
+        comment.delete()
+        return redirect(post.get_absolute_url() + '#comment-list')
+    else:
+        raise PermissionError("No permission Comment")
 
 
-class CommentDelete(DeleteView):
-    model = Comment
-
-    def get_object(self, queryset=None):
-        comment = super(CommentDelete, self).get_object()
-        if comment.author != self.request.user:
-            raise PermissionError("no permisson delete")
-        return comment
-
-    def get_success_url(self):
-        post =self.get_object().post
-        return post.get_absolute_url() + '#comment-list'
+# class CommentDelete(DeleteView):
+#     model = Comment
+#
+#     def get_object(self, queryset=None):
+#         comment = super(CommentDelete, self).get_object()
+#         if comment.author != self.request.user:
+#             raise PermissionError("no permisson delete")
+#         return comment
+#
+#     def get_success_url(self):
+#         post =self.get_object().post
+#         return post.get_absolute_url() + '#comment-list'
 
 # def post_detail(request, pk):
 #     blog_post = Post.objects.get(pk=pk)
