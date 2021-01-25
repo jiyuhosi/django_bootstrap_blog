@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'blog/_assets/css/custom.min.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/_assets/css/all.min.css' %}">
 </head>
 <body>
 
@@ -86,13 +87,26 @@
                 </button>
             </div>
             <div class="modal-body">
-                <a role="button" class="btn btn-primary" href="{% provider_login_url 'google' %}">
-                    Log in with Google
-                </a>
+                <div class="row">
+                    <div class="col-md-6">
+                        <a role="button" class="btn btn-outline-primary" href="{% provider_login_url 'google' %}"><i class="fab fa-google"></i>
+                            Log in with Google
+                        </a>
+                        <a role="button" class="btn btn-outline-info" href="/accounts/login/"><i class="fas fa-envelope"></i>
+                            Log in with Email
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a role="button" class="btn btn-outline-info" href="/accounts/signup/"><i class="fas fa-envelope"></i>
+                            Sign Up with Email
+                        </a>
+                    </div>
+                </div>
+
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
