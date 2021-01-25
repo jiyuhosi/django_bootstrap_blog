@@ -39,7 +39,7 @@ class Post(models.Model):
     #内容
     content = MarkdownxField()
     #作成日
-    created = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
     #作成者
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     #写真UP
@@ -61,6 +61,12 @@ class Post(models.Model):
     def get_markdown_content(self):
         return markdown(self.content)
 
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    text = MarkdownxField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def get_markdown_content(self):
+        return markdown(self.text)
 
 

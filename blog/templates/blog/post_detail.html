@@ -6,11 +6,11 @@
     <!-- Title -->
     <h1 class="mt-4">{{object.title}}</h1>
 
-        {% if object.category %}
-            <span class="badge bg-primary float-right" >{{object.category}}</span>
-        {% else %}
-            <span class="badge bg-primary float-right">unclassified</span>
-        {% endif %}
+    {% if object.category %}
+    <span class="badge bg-primary float-right" >{{object.category}}</span>
+    {% else %}
+    <span class="badge bg-primary float-right">unclassified</span>
+    {% endif %}
 
 
 
@@ -21,7 +21,7 @@
         <a href="#">{{object.author.username}}</a>
     </p>
     {% if request.user == object.author %}
-        <button type="button" class="btn btn-small btn-outline-secondary float-right" onclick="location.href='{{object.get_update_url}}'">EDIT</button>
+    <button type="button" class="btn btn-small btn-outline-secondary float-right" onclick="location.href='{{object.get_update_url}}'">EDIT</button>
     {% endif %}
 
     <hr>
@@ -41,7 +41,7 @@
     {{object.get_markdown_content | safe }}
     <br>
     {% for tag in object.tags.all %}
-        <a href="{{tag.get_absolute_url}}">#{{ tag }}&nbsp</a>
+    <a href="{{tag.get_absolute_url}}">#{{ tag }}&nbsp</a>
     {% endfor %}
     <hr>
 
@@ -57,16 +57,18 @@
             </form>
         </div>
     </div>
-
-    <!-- Single Comment -->
-    <div class="media mb-4">
-        <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-        <div class="media-body">
-            <h5 class="mt-0">Commenter Name</h5>
-            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+    <div id ="comment-list">
+        {% for comment in object.comment_set.all %}
+        <!-- Single Comment -->
+        <div class="media mb-4">
+            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+            <div class="media-body">
+                <h5 class="mt-0">{{comment.author}}</h5>
+                {{comment.get_markdown_content | safe}}
+            </div>
         </div>
+        {% endfor %}
     </div>
-
     <!-- Comment with nested comments -->
     <div class="media mb-4">
         <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">

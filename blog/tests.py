@@ -4,7 +4,7 @@
 
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
-from .models import Post, Category ,Tag
+from .models import Post, Category,Tag,Comment
 from django.utils import timezone
 from django.contrib.auth.models import User
 
@@ -40,6 +40,21 @@ def create_tag(name='some_tag'):
 
     return tag
 
+def create_comment(post, text='a comment', author=None):
+    if author is None:
+
+        author, is_created = User.objects.get_or_create(
+            username='guest',
+            passsword='guestpassword'
+        )
+
+    comment = Comment.objects.create(
+        post=post,
+        text=text,
+        author=author,
+    )
+
+    return comment
 
 class TestModel(TestCase):
     def setUp(self):
@@ -79,12 +94,6 @@ class TestModel(TestCase):
         self.assertEqual(tag_001.post_set.first(), post_000)
         self.assertEqual(tag_001.post_set.last(), post_001)
 
-
-
-
-
-
-
     def test_post(self):
         category = create_category()
 
@@ -96,6 +105,30 @@ class TestModel(TestCase):
         )
 
         self.assertEqual(category.post_set.count(),1)
+
+
+    # def test_comment(self):
+    #
+    #     post_000 = create_post(
+    #         title='The first post',
+    #         content='the the',
+    #         author=self.author_000,
+    #     )
+    #
+    #     self.assertEqual(Comment.objects.count(), 0)
+    #
+    #     comment_000 = create_comment(
+    #         post=post_000,
+    #         text='second comment',
+    #     )
+    #
+    #     comment_001 = create_comment(
+    #         post=post_000,
+    #         text='second comment',
+    #     )
+    #
+    #     self.assertEqual(Comment.objects.count(),2)
+    #     self.assertEqual(post_000.comment_set.count(),2)
 
 
 
@@ -203,6 +236,10 @@ class TestView(TestCase):
 
         )
 
+        comment_000 = create_comment(post_000, text='a test comment', author=self.author_000)
+
+
+
         self.assertGreater(Post.objects.count(), 0)
         post_000_url = post_000.get_absolute_url()
         self.assertEqual(post_000_url, '/blog/{}/'.format(post_000.pk))
@@ -226,6 +263,12 @@ class TestView(TestCase):
         self.assertIn(post_000.content, main_div.text)
 
         self.check_right_side(soup)
+
+        # Comment
+
+        comment_div = main_div.find('div', id='comment-list')
+        self.assertIn(comment_000.author.username, comment_div.text)
+        self.assertIn(comment_000.text, comment_div.text)
 
         # Tag
         self.assertIn('#america',main_div.text)
@@ -343,6 +386,20 @@ class TestView(TestCase):
         self.assertIn('#{}'.format(tag_000.name), blog_h1.text)
         self.assertIn(post_000.title,main_div.text)
         self.assertNotIn(post_001.title,main_div.text)
+
+    def test_post_create(self):
+        response = self.client.get('/blog/create/')
+        self.assertNotEqual(response.status_code, 200)
+
+        self.client.login(username='smith', password='nopassword')
+        response = self.client.get('/blog/create/')
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        main_div = soup.find('div', id='main-div')
+
+
+
 
     def test_post_update(self):
         post_000 = create_post(
