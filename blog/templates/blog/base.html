@@ -127,9 +127,9 @@
                 <h5 class="card-header">Search</h5>
                 <div class="card-body">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for...">
+                        <input type="text" id="search-input" onkeyup="wait_for_enterkey();" class="form-control" placeholder="Search for...">
                         <span class="input-group-append">
-                <button class="btn btn-secondary" type="button">Go!</button>
+                <button class="btn btn-secondary" type="button" onclick="search_post();">Go!</button>
               </span>
                     </div>
                 </div>
@@ -161,6 +161,20 @@
     </div>
     <!-- /.row -->
 </div>
+
+<script>
+    function search_post(){
+        var search_value = document.getElementById('search-input').value;
+        location.href ="/blog/search/" + search_value + "/";
+    }
+
+    function wait_for_enterkey(){
+        if(window.event.keyCode == 13){
+            search_post();
+        }
+    }
+</script>
+
 <script src="{% static 'blog/_assets/js/jquery.min.js' %}"></script>
 <script src="{% static 'blog/bootstrap/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'blog/_assets/js/custom.js' %}"></script>

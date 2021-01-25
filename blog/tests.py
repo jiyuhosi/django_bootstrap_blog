@@ -565,6 +565,32 @@ class TestView(TestCase):
         # self.assertNotIn('I am pr', soup.body.text)
         # self.assertIn('I was pr', soup.body.text)
         #
+    def test_search(self):
+        post_000 = create_post(
+            title='The first post',
+            content='first first',
+            author=self.author_000,
+            )
+        post_001 = create_post(
+            title='The second post',
+            content='second second',
+            author=self.author_000,
+            )
+
+        response = self.client.get('/blog/search/the first post/')
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertIn(post_000.title, soup.body.text)
+        self.assertNotIn(post_001.title, soup.body.text)
+
+        response = self.client.get('/blog/search/The second post/')
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertIn(post_001.title, soup.body.text)
+        self.assertNotIn(post_000.title, soup.body.text)
+
+
+
 
 
 
