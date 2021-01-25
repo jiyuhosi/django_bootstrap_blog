@@ -32,7 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'blog',
+
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,6 +51,8 @@ INSTALLED_APPS = [
 
     'markdownx',
     'crispy_forms',
+    'blog',
+    'basecamp',
 ]
 
 MIDDLEWARE = [
