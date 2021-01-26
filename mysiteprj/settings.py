@@ -26,7 +26,7 @@ SECRET_KEY = 'i($2q_zbe1gb8elbs@jyz^wxgj!$r40k)6yoyk)b!lv_xj&pfo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['45.77.14.192','127.0.0.1']
+ALLOWED_HOSTS = ['45.77.14.192','127.0.0.1','hosikun.com', 'www.hosikun.com']
 
 
 # Application definition
