@@ -169,7 +169,7 @@ class TestView(TestCase):
         # self.assertIn('About me', navbar.text)
 
         self.assertEqual(Post.objects.count(), 0)
-        self.assertIn('no sentence', soup.body.text)
+        self.assertIn('No Contents', soup.body.text)
 
     def test_post_list_with_post(self):
         tag_america =create_tag(name='america')
