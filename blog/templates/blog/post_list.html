@@ -16,8 +16,8 @@
         <div class="card mb-4" id="post-card-{{p.pk}}">
             {% if p.head_image %}
             <img class="card-img-top" src="{{p.head_image.url}}" alt="Card image cap" width="750" height="300">
-            {% else %}
-            <img class="card-img-top" src="https://picsum.photos/seed/picsum/750/300"  width="750" height="300" alt="Card image cap">
+
+<!--            <img class="card-img-top" src="#"  width="750" height="300" alt="Card image cap">-->
             {% endif %}
             <div class="card-body">
                 {% if p.category %}
@@ -68,7 +68,7 @@
                 </ul>
             {% endif %}
         {% else %}
-        <h3>no sentence</h3>
+        <h1 class="my-5" align="center" style="color:red">No Contents</h1>
     {% endif %}
 {% endblock %}
 
